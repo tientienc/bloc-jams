@@ -28,6 +28,21 @@ var albumMarconi = {
    ]
 };
 
+var albumGrizfolk = {
+   title: 'Waking Up the Giants',
+   artist: 'Grizfolk',
+   label: 'Virgin',
+   year: '2016',
+   albumArtUrl: 'assets/images/album_covers/grizfolk.jpeg',
+   songs: [
+       { title: 'Into The Barrens', duration: '3:16' },
+       { title: 'Troublemaker', duration: '3:28' },
+       { title: 'Hymnals', duration: '3:13'},
+       { title: 'The Struggle', duration: '3:32' },
+       { title: 'Waiting For You', duration: '3:56'}
+   ]
+};
+
 var createSongRow = function(songNumber, songName, songLength) {
     var template =
        '<tr class="album-view-song-item">'
@@ -65,4 +80,14 @@ var setCurrentAlbum = function(album) {
 
 window.onload = function() {
     setCurrentAlbum(albumPicasso);
+
+    var albums = [albumPicasso, albumMarconi, albumGrizfolk];
+    var index = 1;
+    albumImage.addEventListener("click", function(event) {
+      setCurrentAlbum(albums[index]);
+      index++;
+      if (index == albums.length) {
+        index = 0;
+      }
+    });
 };
