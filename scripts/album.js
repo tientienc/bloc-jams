@@ -183,6 +183,20 @@ var previousSong = function() {
     $lastSongNumberCell.html(lastSongNumber);
 };
 
+var togglePlayFromPlayerBar = function() {
+  var $currentSong = getSongNumberCell(currentlyPlayingSongNumber);
+
+  if(currentSoundFile && currentSoundFile.isPaused()) {
+    $currentSong.html(pauseButtonTemplate);
+    $(this).html(playerBarPauseButton)
+    currentSoundFile.play();
+  } else if(currentSoundFile) {
+    $currentSong.html(playButtonTemplate);
+    $(this).html(playerBarPlayButton);
+    currentSoundFile.paused();
+  }
+};
+
 var updatePlayerSongBar = function() {
   $('.currently-playing .song-name').text(currentSongFromAlbum.title);
   $('.currently-playing .artist-name').text(currentAlbum.artist);
@@ -251,12 +265,14 @@ var currentVolume = 80;
 
 var $previousButton = $('.main-controls .previous');
 var $nextButton = $('.main-controls .next');
+var $playPauseButton = $('.main-controls .play-pause');
 
 $(document).ready(function() {
   setCurrentAlbum(albumPicasso);
 
   $previousButton.click(previousSong);
   $nextButton.click(nextSong);
+  $playPauseButton.click(togglePlayFromPlayerBar);
 
     var albums = [albumPicasso, albumMarconi, albumGrizfolk];
     var index = 1;
