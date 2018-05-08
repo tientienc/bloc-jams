@@ -7,9 +7,9 @@ var setSong = function(songNumber) {
   currentSongFromAlbum = currentAlbum.songs[songNumber-1];
   // #1
   currentSoundFile = new buzz.sound(currentSongFromAlbum.audioUrl, {
-         // #2
-         formats: [ 'mp3' ],
-         preload: true
+   // #2
+   formats: [ 'mp3' ],
+   preload: true
   });
 
   setVolume(currentVolume);
@@ -50,9 +50,9 @@ var createSongRow = function(songNumber, songName, songLength) {
 
          if (currentlyPlayingSongNumber !== songNumber) {
              // Switch from Play -> Pause button to indicate new song is playing.
+            $(this).html(pauseButtonTemplate);
             setSong(songNumber);
             currentSoundFile.play();
-            $(this).html(pauseButtonTemplate);
             currentSongFromAlbum = currentAlbum.songs[songNumber - 1];
             updatePlayerBarSong();
          } else if (currentlyPlayingSongNumber === songNumber) {
@@ -91,7 +91,7 @@ var createSongRow = function(songNumber, songName, songLength) {
     $row.find('.song-item-number').click(clickHandler);
     $row.hover(onHover, offHover);
     return $row;
-  }; //Create song row
+}; //Create song row
 
 var setCurrentAlbum = function(album) {
   currentAlbum = album;
@@ -151,7 +151,6 @@ var nextSong = function() {
     $lastSongNumberCell.html(lastSongNumber);
 };
 
-
 var previousSong = function() {
     var currentSongIndex = trackIndex(currentAlbum, currentSongFromAlbum);
     // Note that we're _decrementing_ the index here
@@ -183,25 +182,27 @@ var previousSong = function() {
     $lastSongNumberCell.html(lastSongNumber);
 };
 
-var togglePlayFromPlayerBar = function() {
-  var $currentSong = getSongNumberCell(currentlyPlayingSongNumber);
-
-  if(currentSoundFile && currentSoundFile.isPaused()) {
-    $currentSong.html(pauseButtonTemplate);
-    $(this).html(playerBarPauseButton)
-    currentSoundFile.play();
-  } else if(currentSoundFile) {
-    $currentSong.html(playButtonTemplate);
-    $(this).html(playerBarPlayButton);
-    currentSoundFile.paused();
-  }
-};
-
-var updatePlayerSongBar = function() {
+var updatePlayerBarSong = function() {
   $('.currently-playing .song-name').text(currentSongFromAlbum.title);
   $('.currently-playing .artist-name').text(currentAlbum.artist);
   $('.currently-playing .artist-song-mobile').text(currentSongFromAlbum.title + " - " + currentAlbum.artist);
   $('.main-controls .play-pause').html(playerBarPauseButton);
+};
+
+var togglePlayFromPlayerBar = function() {
+  var $currentSong = getSongNumberCell(currentlyPlayingSongNumber);
+
+  if (currentlyPlayingSongNumber) {
+    if(currentSoundFile.isPaused()){
+      $currentSong.html(pauseButtonTemplate);
+      $playPauseButton.html(playerBarPauseButton);
+      currentSoundFile.play();
+    } else {
+      $currentSong.html(playButtonTemplate);
+      $playPauseButton.html(playerBarPlayButton);
+      currentSoundFile.pause();
+    }
+  }
 };
 
 function findParentByClassName(element, classname) {
@@ -274,13 +275,13 @@ $(document).ready(function() {
   $nextButton.click(nextSong);
   $playPauseButton.click(togglePlayFromPlayerBar);
 
-    var albums = [albumPicasso, albumMarconi, albumGrizfolk];
-    var index = 1;
-    albumImage.addEventListener("click", function(event) {
-        setCurrentAlbum(albums[index]);
-        index++;
-        if (index == albums.length) {
-          index = 0;
-        }
-    });
+  /*var albums = [albumPicasso, albumMarconi, albumGrizfolk];
+  var index = 1;
+  albumImage.addEventListener("click", function(event) {
+      setCurrentAlbum(albums[index]);
+      index++;
+      if (index == albums.length) {
+        index = 0;
+      }
+  });*/
 });
